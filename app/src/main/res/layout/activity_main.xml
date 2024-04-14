@@ -7,46 +7,150 @@
     <androidx.camera.view.PreviewView
         android:id="@+id/viewFinder"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter" />
 
-    <!-- Adicione o ImageView -->
     <ImageView
         android:id="@+id/capturedImageView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/captureButton"
-        android:layout_margin="16dp"
-        android:visibility="visible" />
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:visibility="gone"
+        android:background="#000000"
+        />
 
-    <Button
-        android:id="@+id/captureButton"
-        android:layout_width="wrap_content"
+    <!-- Botões de captura e salvamento -->
+    <LinearLayout
+        android:id="@+id/captureSaveLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Capture"
+        android:orientation="horizontal"
         android:layout_alignParentBottom="true"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:id="@+id/cancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Cancel"
+            android:enabled="false"
+            />
+
+        <Button
+            android:id="@+id/captureButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Capture" />
+
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Save"
+            android:enabled="false" />
+
+    </LinearLayout>
+
+    <!-- Botões de processamento de imagem -->
+    <LinearLayout
+        android:id="@+id/filterButtonsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_above="@id/captureSaveLayout"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="16dp"
+        android:gravity="center_horizontal"
+        android:visibility="gone"
+        >
 
-    <Button
-        android:id="@+id/processButton"
+        <Button
+            android:id="@+id/grayScaleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="12sp"
+            android:text="Gray Scale" />
+
+        <Button
+            android:id="@+id/filtersButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="12sp"
+            android:text="Filters" />
+
+        <Button
+            android:id="@+id/brightnessContrastButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="12sp"
+            android:text="Brightness/Constrast" />
+
+        <Button
+            android:id="@+id/edgeDetectionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="12sp"
+            android:text="Edge Detection" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/brightnessContrastLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Process"
-        android:layout_above="@id/captureButton"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_toStartOf="@id/captureButton"/>
+        android:layout_above="@id/filterButtonsLayout"
+        tools:context=".BrightnessContrastActivity"
+        android:background="#99000000"
+        android:visibility="gone">
 
-    <Button
-        android:id="@+id/saveButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Save"
-        android:layout_above="@id/captureButton"
-        android:layout_marginBottom="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_toEndOf="@id/captureButton"/>
+        <!-- Barra de deslizamento para ajuste de brilho -->
+        <TextView
+            android:id="@+id/brightnessLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Brilho"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <SeekBar
+            android:id="@+id/brightnessSeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/brightnessLabel"
+            android:layout_marginTop="8dp"
+            android:progress="50"
+            android:max="100" />
+
+        <!-- Barra de deslizamento para ajuste de contraste -->
+        <TextView
+            android:id="@+id/contrastLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/brightnessSeekBar"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="Contraste"
+            android:textSize="16sp"
+            android:progress="50"
+            android:textStyle="bold" />
+
+        <SeekBar
+            android:id="@+id/contrastSeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/contrastLabel"
+            android:layout_marginTop="8dp"
+            android:max="100" />
+
+    </RelativeLayout>
+
+
+
+
 
 </RelativeLayout>
-
-
