@@ -133,7 +133,6 @@ class MainActivity : AppCompatActivity() {
                 capturedImageView.setImageBitmap(currentImageBitmap)
             }
 
-            //Gabriel Barros adicionar seus layouts aqui para desabilitar eles
         }
 
         filtersButton.setOnClickListener {
@@ -171,7 +170,6 @@ class MainActivity : AppCompatActivity() {
             filtersApplicationLayout.visibility = View.GONE
             edgeDetection = false
             grayScalesDetection = false
-            //Gabriel Barros adicionar seus layouts aqui para desabilitar eles
         }
 
         edgeDetectionButton.setOnClickListener {
@@ -189,7 +187,6 @@ class MainActivity : AppCompatActivity() {
                 capturedImageView.setImageBitmap(currentImageBitmap)
             }
 
-            //Gabriel Barros adicionar seus layouts aqui para desabilitar eles
         }
 
         brightnessSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
