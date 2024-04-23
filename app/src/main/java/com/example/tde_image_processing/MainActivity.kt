@@ -49,6 +49,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var brightnessContrastButton: Button
     private lateinit var edgeDetectionButton: Button
 
+    private lateinit var filtersApplicationLayout: LinearLayout
+    private lateinit var negativeButton : Button
+    private lateinit var sepiaButton : Button
+
     private lateinit var brightnessContrastLayout: RelativeLayout
     private lateinit var brightnessSeekBar: SeekBar
     private lateinit var contrastSeekBar: SeekBar
@@ -57,6 +61,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var currentImageBitmap: Bitmap
     private var editedImageBitmap: Bitmap? = null
 
+    private var grayScalesDetection = false
     private var edgeDetection = false
 
     private val TAG = "camerax"
@@ -84,6 +89,10 @@ class MainActivity : AppCompatActivity() {
         edgeDetectionButton = binding.edgeDetectionButton
         filterButtonLayout = binding.filterButtonsLayout
 
+        filtersApplicationLayout = binding.filtersApplicationLayout
+        negativeButton = binding.negativeButton
+        sepiaButton = binding.sepiaButton
+
         brightnessContrastLayout = binding.brightnessContrastLayout
         brightnessSeekBar = binding.brightnessSeekBar
         contrastSeekBar = binding.contrastSeekBar
@@ -110,6 +119,47 @@ class MainActivity : AppCompatActivity() {
             cancelCapture()
         }
 
+        grayScaleButton.setOnClickListener {
+            brightnessContrastLayout.visibility = View.GONE
+            filtersApplicationLayout.visibility = View.GONE
+
+            if (!grayScalesDetection) {
+                grayScalesDetection = true
+                applyFilter("grayScale", currentImageBitmap).also {
+                    capturedImageView.setImageBitmap(it)
+                }
+            } else {
+                grayScalesDetection = false
+                capturedImageView.setImageBitmap(currentImageBitmap)
+            }
+
+            //Gabriel Barros adicionar seus layouts aqui para desabilitar eles
+        }
+
+        filtersButton.setOnClickListener {
+            brightnessContrastLayout.visibility = View.GONE
+            edgeDetection = false
+            grayScalesDetection = false
+
+            if (filtersApplicationLayout.visibility == View.VISIBLE) {
+                filtersApplicationLayout.visibility = View.GONE
+            } else {
+                filtersApplicationLayout.visibility = View.VISIBLE
+            }
+        }
+
+        sepiaButton.setOnClickListener {
+            applyFilter("sepia", currentImageBitmap).also {
+                capturedImageView.setImageBitmap(it)
+            }
+        }
+
+        negativeButton.setOnClickListener {
+            applyFilter("negative", currentImageBitmap).also {
+                capturedImageView.setImageBitmap(it)
+            }
+        }
+
         brightnessContrastButton.setOnClickListener {
             if (brightnessContrastLayout.visibility == View.VISIBLE) {
                 brightnessContrastLayout.visibility = View.GONE
@@ -118,13 +168,16 @@ class MainActivity : AppCompatActivity() {
             }
             brightnessSeekBar.progress = 50
             contrastSeekBar.progress = 50
+            filtersApplicationLayout.visibility = View.GONE
             edgeDetection = false
-
+            grayScalesDetection = false
             //Gabriel Barros adicionar seus layouts aqui para desabilitar eles
         }
 
         edgeDetectionButton.setOnClickListener {
             brightnessContrastLayout.visibility = View.GONE
+            filtersApplicationLayout.visibility = View.GONE
+            grayScalesDetection = false
 
             if (!edgeDetection) {
                 edgeDetection = true
@@ -166,6 +219,59 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    private fun applyFilter(filter: String, bitmap: Bitmap) : Bitmap {
+        val width = bitmap.width
+        val height = bitmap.height
+        val newBitmap = Bitmap.createBitmap(width,height,bitmap.config)
+
+        for (x in 0 until width) {
+            for (y in 0 until height) {
+                val pixel = bitmap.getPixel(x, y)
+
+                val newPixel = when (filter) {
+                    "grayScale" -> grayScalePixel(pixel)
+                    "sepia" -> sepiaPixel(pixel)
+                    "negative" -> negativePixel(pixel)
+                    else -> 0
+                }
+                newBitmap.setPixel(x, y, newPixel)
+            }
+        }
+
+        editedImageBitmap = newBitmap
+        return newBitmap
+    }
+
+    private fun grayScalePixel(pixel:Int): Int {
+        val red = pixel shr 16 and 0xff
+        val green = pixel shr 8 and 0xff
+        val blue = pixel shr 0xff and 0xff
+
+        val grayScale = (red + green + blue) / 3
+
+        return 0xff000000.toInt() or (grayScale shl 16) or (grayScale shl 8) or grayScale
+    }
+
+    private fun sepiaPixel(pixel: Int) : Int {
+        val red = pixel shr 16 and 0xff
+        val green = pixel shr 8 and 0xff
+        val blue = pixel and 0xff
+
+        val newRed = (0.393 * red + 0.769 * green + 0.189 * blue).coerceAtMost(255.0).toInt()
+        val newGreen = (0.349 * red + 0.686 * green + 0.168 * blue).coerceAtMost(255.0).toInt()
+        val newBlue = (0.272 * red + 0.534 * green + 0.131 * blue).coerceAtMost(255.0).toInt()
+
+        return 0xff000000.toInt() or (newRed shl 16) or (newGreen shl 8) or newBlue
+    }
+
+    private fun negativePixel(pixel: Int) : Int {
+        val red = 255 - (pixel shr 16 and 0xff)
+        val green = 255 - (pixel shr 8 and 0xff)
+        val blue = 255 - (pixel and 0xff)
+
+        return 0xff000000.toInt() or (red shl 16) or (green shl 8) or blue
+    }
+
     private fun updateBrightnessAndContrast(bitmap: Bitmap, brightness: Int, contrast: Int): Bitmap {
         val adjustedBrightness = (brightness - 100) * 2.0f
         val adjustedContrast = (contrast - 50) * 2.0f
@@ -198,7 +304,7 @@ class MainActivity : AppCompatActivity() {
         return applyColorMatrix(bitmap, combinedMatrix)
     }
 
-    fun sobelEdgeDetection(bitmap: Bitmap): Bitmap {
+    private fun sobelEdgeDetection(bitmap: Bitmap): Bitmap {
         val width = bitmap.width
         val height = bitmap.height
         val edgeBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)

@@ -8,7 +8,9 @@
         android:id="@+id/viewFinder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitCenter" />
+        android:scaleType="fitCenter" >
+
+    </androidx.camera.view.PreviewView>
 
     <ImageView
         android:id="@+id/capturedImageView"
@@ -20,6 +22,29 @@
         />
 
     <!-- Botões de captura e salvamento -->
+    <LinearLayout
+        android:id="@+id/filtersApplicationLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/filterButtonsLayout"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/sepiaButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="sepia" />
+
+        <Button
+            android:id="@+id/negativeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="negative" />
+    </LinearLayout>
+
     <LinearLayout
         android:id="@+id/captureSaveLayout"
         android:layout_width="match_parent"
@@ -56,45 +81,44 @@
         android:id="@+id/filterButtonsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_above="@id/captureSaveLayout"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="16dp"
         android:gravity="center_horizontal"
-        android:visibility="gone"
-        >
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <Button
             android:id="@+id/grayScaleButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:textSize="12sp"
-            android:text="Gray Scale" />
+            android:text="Gray Scale"
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/filtersButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:textSize="12sp"
-            android:text="Filters" />
+            android:text="Filters"
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/brightnessContrastButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:textSize="12sp"
-            android:text="Brightness/Constrast" />
+            android:text="Brightness/Constrast"
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/edgeDetectionButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:textSize="12sp"
-            android:text="Edge Detection" />
+            android:text="Edge Detection"
+            android:textSize="12sp" />
 
     </LinearLayout>
 
@@ -103,9 +127,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@id/filterButtonsLayout"
-        tools:context=".BrightnessContrastActivity"
         android:background="#99000000"
-        android:visibility="gone">
+        android:visibility="gone"
+        tools:context=".BrightnessContrastActivity">
 
         <!-- Barra de deslizamento para ajuste de brilho -->
         <TextView
@@ -123,8 +147,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/brightnessLabel"
             android:layout_marginTop="8dp"
-            android:progress="50"
-            android:max="100" />
+            android:max="100"
+            android:progress="50" />
 
         <!-- Barra de deslizamento para ajuste de contraste -->
         <TextView
@@ -134,9 +158,9 @@
             android:layout_below="@id/brightnessSeekBar"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
+            android:progress="50"
             android:text="Contraste"
             android:textSize="16sp"
-            android:progress="50"
             android:textStyle="bold" />
 
         <SeekBar
